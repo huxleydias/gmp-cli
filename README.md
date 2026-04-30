@@ -321,6 +321,59 @@ gmp bq custom --project my-project -q "SELECT event_date, COUNT(*) as events FRO
 | `gsc-query-clusters` | GSC | Top queries by volume |
 | `gsc-cannibalization` | GSC | Queries with multiple competing pages |
 
+## PageSpeed Insights
+
+Run Google PageSpeed Insights (Lighthouse) analysis from the terminal.
+
+> **Note:** Requires a Google API key with the **PageSpeed Insights API** enabled.
+>
+> **How to get an API key:**
+> 1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+> 2. Create or select a project
+> 3. Go to **APIs & Services → Library**, search for **PageSpeed Insights API** and enable it
+> 4. Go to **APIs & Services → Credentials → Create Credentials → API Key**
+> 5. (Recommended) Restrict the key to the PageSpeed Insights API only
+>
+> Set the key as an environment variable or pass it via `--key`:
+> ```bash
+> export GOOGLE_API_KEY=your_api_key_here
+> ```
+
+### Analyze a URL
+
+```bash
+# Mobile performance (default)
+gmp psi analyze https://example.com
+
+# Desktop with multiple categories
+gmp psi analyze https://example.com --strategy desktop --category performance,seo,accessibility
+
+# Portuguese locale, JSON output
+gmp psi analyze https://example.com --locale pt-BR -f json
+
+# Pass API key inline
+gmp psi analyze https://example.com --key YOUR_API_KEY
+```
+
+### Options
+
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `--strategy` | `mobile`, `desktop` | `mobile` | Device type for analysis |
+| `--category` | `performance`, `accessibility`, `best-practices`, `seo`, `pwa` | `performance` | Comma-separated categories to run |
+| `--locale` | `en`, `pt-BR`, etc. | `en` | Locale for formatted text |
+| `--key` | string | `$GOOGLE_API_KEY` | Google API key |
+| `-f, --format` | `json`, `table`, `csv` | `table` | Output format |
+
+### Output (table mode)
+
+Shows three sections:
+- **Scores** — 0–100 score per category with rating (good / needs improvement / poor)
+- **Lighthouse Metrics** — FCP, LCP, TBT, CLS, Speed Index, TTI, INP with values and scores
+- **Field Data (CrUX)** — real-user p75 values from Chrome UX Report when available
+
+Use `-f json` to get the full raw Lighthouse result for deeper analysis.
+
 ## Output Formats
 
 All commands support `-f` / `--format`:
@@ -339,6 +392,7 @@ All commands support `-f` / `--format`:
 - [x] **Google Tag Manager** — accounts, containers, tags, triggers, variables, versions
 - [x] **3 output formats** — JSON (pipe to `jq` or AI agents), table, CSV
 - [x] **BigQuery** — query GMP export data with 12 pre-built templates
+- [x] **PageSpeed Insights** — Lighthouse scores, Core Web Vitals, and CrUX field data
 - [x] **AI agent skills** — OpenClaw-compatible skills for all services
 
 See [ROADMAP.md](ROADMAP.md) for what's next.
