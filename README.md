@@ -15,7 +15,16 @@ Or from source:
 ```bash
 git clone https://github.com/lucianfialho/gmp-cli.git
 cd gmp-cli
-npm install && npm run build && npm link
+npm install
+npm run build
+npm link
+```
+
+Verify the local build:
+
+```bash
+node dist/index.js --help
+gmp --help
 ```
 
 ## Authentication
