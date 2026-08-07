@@ -374,6 +374,31 @@ Shows three sections:
 
 Use `-f json` to get the full raw Lighthouse result for deeper analysis.
 
+## Merchant Center
+
+Google Merchant Center via the Merchant API (v1). Requires the `content` OAuth
+scope — if you authenticated before v1.5.0, run `gmp auth login` again.
+
+```bash
+# List accessible Merchant Center accounts
+gmp mc accounts
+
+# Full product catalog with per-item status and issues (paginated automatically)
+# stdout: one summary row per product (csv default); --out saves the raw API JSON
+gmp mc products -a ACCOUNT_ID --out products.json > products.csv
+
+# Limit for a quick sample
+gmp mc products -a ACCOUNT_ID --limit 100 -f table
+
+# Account-level issues (suspensions, policy problems)
+gmp mc issues -a ACCOUNT_ID
+```
+
+The products summary includes `availability`, `price`, `gtin`, `disapproved`,
+`issueCount`, `issueCodes` and `maxSeverity` per product — enough to audit a
+feed without any extra API calls. The `--out` JSON keeps the complete
+`productAttributes` + `productStatus.itemLevelIssues` for deeper analysis.
+
 ## Output Formats
 
 All commands support `-f` / `--format`:
@@ -393,6 +418,7 @@ All commands support `-f` / `--format`:
 - [x] **3 output formats** — JSON (pipe to `jq` or AI agents), table, CSV
 - [x] **BigQuery** — query GMP export data with 12 pre-built templates
 - [x] **PageSpeed Insights** — Lighthouse scores, Core Web Vitals, and CrUX field data
+- [x] **Merchant Center** — accounts, product catalog with item-level issues, account issues (Merchant API v1)
 - [x] **AI agent skills** — OpenClaw-compatible skills for all services
 
 See [ROADMAP.md](ROADMAP.md) for what's next.

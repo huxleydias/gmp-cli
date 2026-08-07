@@ -5,3 +5,6 @@ dist/
 *.js.map
 !src/**
 .env
+
+.DS_Store
+.gates/
